@@ -118,8 +118,8 @@
    Design-Tokens an einer Stelle gesammelt sind.
    -------------------------------------------------------------------- */
 :root {
-  --font-display: "JetBrains Mono", "Fira Code", monospace;
-  --font-body: "IBM Plex Sans", "Segoe UI", sans-serif;
+--font-display: "Cascadia Code", "Consolas", "Courier New", monospace;
+--font-body: "Segoe UI", "Arial", sans-serif;
 
   --radius-sm: 6px;
   --radius-md: 12px;
