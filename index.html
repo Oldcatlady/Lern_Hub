@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<!--
+  INDEX.HTML - Landing Page des Lernhub
+  ---------------------------------------------------------------------
+  Diese Seite ist der erste Kontaktpunkt: hier meldet sich ein Nutzer
+  an oder registriert sich neu. Firebase Authentication wird erst im
+  nächsten Bauabschnitt angebunden (siehe TODO-Kommentare in
+  js/auth-ui.js) - aktuell steht hier nur die fertige UI-Schicht mit
+  clientseitiger Eingabeprüfung.
+-->
+<html lang="de" data-theme="dunkel">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Lernhub | Fachinformatiker/innen für Anwendungsentwicklung</title>
+    <meta
+      name="description"
+      content="Lernhub für angehende Fachinformatiker/innen Anwendungsentwicklung: Multiple-Choice, Flashcards, Texteingabe und Drag-and-Drop Quize."
+    />
+
+    <!-- Schriftarten: JetBrains Mono für Überschriften/Terminal-Optik,
+         IBM Plex Sans als gut lesbare Fließtext-Schrift -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=JetBrains+Mono:wght@500;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Design-Tokens (Farben, Abstände) zuerst laden, danach das Layout -->
+    <link rel="stylesheet" href="css/themes.css" />
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+
+  <body>
+    <!-- Zwei-Spalten-Grundgerüst: links Markenauftritt + Theme-Wahl,
+         rechts das Login/Register-Terminal -->
+    <main class="landing">
+      <!-- ================= LINKE SPALTE ================= -->
+      <section class="landing__intro" aria-labelledby="landing-title">
+        <p class="landing__eyebrow">Lernhub · IHK-Vorbereitung</p>
+
+        <h1 class="landing__title" id="landing-title">
+          Fachinformatiker&#8203;/innen für Anwendungsentwicklung
+        </h1>
+
+        <p class="landing__subtitle">
+          Multiple-Choice, Flashcards, Texteingabe- und Drag-and-Drop-Quize
+          für jedes Fach deiner Umschulung - mit Statistik, wie sicher du
+          jedes Thema schon beherrschst.
+        </p>
+
+        <!-- Theme-Auswahl: schon auf der Landing Page nutzbar, damit der
+             Nutzer sofort sieht, wie "seine" Oberfläche aussehen wird.
+             Die Auswahl wird in localStorage gespeichert und später
+             zusätzlich im User-Profil in Firestore hinterlegt. -->
+        <div class="theme-picker">
+          <span class="theme-picker__label" id="theme-picker-label"
+            >Oberfläche wählen</span
+          >
+          <div
+            class="theme-picker__options"
+            role="group"
+            aria-labelledby="theme-picker-label"
+          >
+            <!-- Jeder Button trägt data-theme-value = der Wert, der als
+                 data-theme am <html>-Tag gesetzt wird. Die zwei
+                 Farbflächen im Button sind eine Mini-Vorschau des
+                 jeweiligen Themes und unabhängig vom aktuell aktiven Theme. -->
+            <button
+              type="button"
+              class="theme-swatch"
+              data-theme-value="dunkel"
+              aria-pressed="true"
+              aria-label="Theme Dunkel auswählen"
+              style="background-color:#0b0f14"
+            >
+              <span style="background-color:#4ee1a0"></span>
+              <span style="background-color:#7c9fff"></span>
+            </button>
+
+            <button
+              type="button"
+              class="theme-swatch"
+              data-theme-value="blumenwiese"
+              aria-pressed="false"
+              aria-label="Theme Blumenwiese auswählen"
+              style="background-color:#eef5ea"
+            >
+              <span style="background-color:#e85d9c"></span>
+              <span style="background-color:#7ec8e3"></span>
+            </button>
+
+            <button
+              type="button"
+              class="theme-swatch"
+              data-theme-value="zuckerwatte"
+              aria-pressed="false"
+              aria-label="Theme Zuckerwatte auswählen"
+              style="background-color:#fdf2f6"
+            >
+              <span style="background-color:#b98cd6"></span>
+              <span style="background-color:#ffb997"></span>
+            </button>
+
+            <button
+              type="button"
+              class="theme-swatch"
+              data-theme-value="wolke"
+              aria-pressed="false"
+              aria-label="Theme Wolke auswählen"
+              style="background-color:#f7fbfa"
+            >
+              <span style="background-color:#4fb8ae"></span>
+              <span style="background-color:#8fd3e8"></span>
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= RECHTE SPALTE ================= -->
+      <section class="landing__auth" aria-label="Anmeldung und Registrierung">
+        <div class="terminal">
+          <!-- Titelleiste im Fenster-Look -->
+          <div class="terminal__titlebar">
+            <span class="terminal__dots" aria-hidden="true">
+              <span></span><span></span><span></span>
+            </span>
+            <span class="terminal__path">~/lernhub/auth</span>
+          </div>
+
+          <!-- Wird per JS Zeichen-für-Zeichen "getippt" (rein dekorativ,
+               aria-hidden, damit Screenreader nicht zweimal vorlesen) -->
+          <p class="terminal__prompt" id="terminal-prompt" aria-hidden="true"></p>
+
+          <!-- Tabs zum Umschalten zwischen den zwei Formularen darunter.
+               role="tablist" + aria-selected sorgen für korrekte
+               Screenreader-Ansage. -->
+          <div class="auth-tabs" role="tablist" aria-label="Anmeldemodus">
+            <button
+              class="auth-tabs__btn"
+              id="tab-login"
+              role="tab"
+              type="button"
+              aria-selected="true"
+              aria-controls="form-login"
+            >
+              Anmelden
+            </button>
+            <button
+              class="auth-tabs__btn"
+              id="tab-register"
+              role="tab"
+              type="button"
+              aria-selected="false"
+              aria-controls="form-register"
+            >
+              Registrieren
+            </button>
+          </div>
+
+          <!-- ---------- LOGIN-FORMULAR ---------- -->
+          <!-- novalidate: wir übernehmen die Validierung selbst in JS,
+               damit die Fehlermeldungen zum restlichen Design passen
+               und wir volle Kontrolle über Sicherheitsprüfungen haben. -->
+          <form
+            class="auth-form"
+            id="form-login"
+            role="tabpanel"
+            aria-labelledby="tab-login"
+            novalidate
+          >
+            <div class="field">
+              <label for="login-email">E-Mail-Adresse</label>
+              <input
+                type="email"
+                id="login-email"
+                name="email"
+                autocomplete="email"
+                required
+                aria-describedby="login-email-error"
+              />
+              <!-- aria-live="polite": Screenreader lesen neue Fehlermeldungen
+                   automatisch vor, sobald JS sie einträgt -->
+              <span class="field__error" id="login-email-error" aria-live="polite"></span>
+            </div>
+
+            <div class="field">
+              <label for="login-password">Passwort</label>
+              <input
+                type="password"
+                id="login-password"
+                name="password"
+                autocomplete="current-password"
+                required
+                aria-describedby="login-password-error"
+              />
+              <span class="field__error" id="login-password-error" aria-live="polite"></span>
+            </div>
+
+            <button class="btn-primary" type="submit">Einloggen</button>
+          </form>
+
+          <!-- ---------- REGISTRIERUNGS-FORMULAR ---------- -->
+          <form
+            class="auth-form"
+            id="form-register"
+            role="tabpanel"
+            aria-labelledby="tab-register"
+            hidden
+            novalidate
+          >
+            <div class="field">
+              <label for="register-username">Nutzername</label>
+              <input
+                type="text"
+                id="register-username"
+                name="username"
+                autocomplete="nickname"
+                required
+                minlength="3"
+                maxlength="24"
+                aria-describedby="register-username-error register-username-hint"
+              />
+              <span class="field__hint" id="register-username-hint"
+                >3-24 Zeichen, kein Klarname nötig.</span
+              >
+              <span
+                class="field__error"
+                id="register-username-error"
+                aria-live="polite"
+              ></span>
+            </div>
+
+            <div class="field">
+              <label for="register-email">E-Mail-Adresse</label>
+              <input
+                type="email"
+                id="register-email"
+                name="email"
+                autocomplete="email"
+                required
+                aria-describedby="register-email-error"
+              />
+              <span class="field__error" id="register-email-error" aria-live="polite"></span>
+            </div>
+
+            <div class="field">
+              <label for="register-password">Passwort</label>
+              <input
+                type="password"
+                id="register-password"
+                name="password"
+                autocomplete="new-password"
+                required
+                minlength="12"
+                aria-describedby="register-password-error register-password-hint"
+              />
+              <span class="field__hint" id="register-password-hint"
+                >Mindestens 12 Zeichen, Groß-/Kleinbuchstaben, Zahl und
+                Sonderzeichen.</span
+              >
+              <span
+                class="field__error"
+                id="register-password-error"
+                aria-live="polite"
+              ></span>
+            </div>
+
+            <div class="field">
+              <label for="register-password-confirm">Passwort bestätigen</label>
+              <input
+                type="password"
+                id="register-password-confirm"
+                name="passwordConfirm"
+                autocomplete="new-password"
+                required
+                aria-describedby="register-password-confirm-error"
+              />
+              <span
+                class="field__error"
+                id="register-password-confirm-error"
+                aria-live="polite"
+              ></span>
+            </div>
+
+            <!-- Pflicht-Checkbox zur Bestätigung der rechtlichen Hinweise -->
+            <div class="field">
+              <label style="flex-direction: row; align-items: center; gap: 0.5rem">
+                <input
+                  type="checkbox"
+                  id="register-terms"
+                  name="terms"
+                  required
+                  style="width: auto"
+                />
+                Ich akzeptiere die
+                <a href="agb.html">AGB</a> und die
+                <a href="datenschutz.html">Datenschutzerklärung</a>.
+              </label>
+              <span
+                class="field__error"
+                id="register-terms-error"
+                aria-live="polite"
+              ></span>
+            </div>
+
+            <button class="btn-primary" type="submit">Konto anlegen</button>
+          </form>
+
+          <!-- Gemeinsamer Statusbereich für beide Formulare, z.B.
+               "Bitte bestätige deine E-Mail-Adresse" nach der Registrierung.
+               data-state steuert die Farbe (neutral/error/success, siehe style.css) -->
+          <p
+            class="terminal__status"
+            id="auth-status"
+            role="status"
+            aria-live="polite"
+          ></p>
+        </div>
+      </section>
+    </main>
+
+    <!-- Reihenfolge wichtig: zuerst Theme-Logik (läuft sofort beim Laden,
+         damit kein "Farbblitz" im Standard-Theme entsteht), danach die
+         Formular-Logik -->
+    <script src="js/theme-switcher.js"></script>
+    <script src="js/auth-ui.js"></script>
+  </body>
+</html>

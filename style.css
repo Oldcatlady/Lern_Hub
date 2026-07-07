@@ -1,0 +1,355 @@
+/* ==========================================================================
+   STYLE.CSS
+   ---------------------------------------------------------------------
+   Layout und Komponenten der Landing Page. Enthält bewusst KEINE
+   Farbwerte direkt - alle Farben kommen aus themes.css über
+   var(--...). So bleibt das Theme-System die einzige Quelle für Farben.
+   ========================================================================== */
+
+/* Grund-Reset: Browser-Standardabstände entfernen, box-sizing vereinheitlichen.
+   Das verhindert die typischen "warum ist da ein Rand"-Überraschungen. */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Grundeinstellungen für die ganze Seite */
+html {
+  /* Sanfter Übergang, wenn sich die Theme-Variablen ändern (siehe themes.css) */
+  transition: background-color var(--transition-theme);
+}
+
+body {
+  font-family: var(--font-body);
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  min-height: 100vh;
+  line-height: 1.55;
+  /* Übergänge für Hintergrund- und Textfarbe, damit der Theme-Wechsel
+     nicht hart "umspringt", sondern weich überblendet */
+  transition: background-color var(--transition-theme), color var(--transition-theme);
+}
+
+/* Respektiert die Betriebssystem-Einstellung "Bewegungen reduzieren" -
+   wichtig für Barrierefreiheit, wird in der Skill-Vorgabe explizit gefordert */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* --------------------------------------------------------------------
+   Seiten-Grundgerüst: zweispaltiges Layout auf breiten Screens,
+   untereinander gestapelt auf schmalen Screens (Mobile-first-Prinzip)
+   -------------------------------------------------------------------- */
+.landing {
+  display: grid;
+  grid-template-columns: 1fr; /* Mobile: eine Spalte */
+  min-height: 100vh;
+}
+
+/* Ab einer bestimmten Breite: zwei gleich große Spalten nebeneinander */
+@media (min-width: 900px) {
+  .landing {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+/* --------------------------------------------------------------------
+   Linke Spalte: Markenauftritt, Erklärtext, Theme-Auswahl
+   -------------------------------------------------------------------- */
+.landing__intro {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: var(--space-4);
+  padding: var(--space-6) var(--space-5);
+}
+
+.landing__eyebrow {
+  font-family: var(--font-display);
+  font-size: 0.8rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-accent);
+}
+
+.landing__title {
+  font-family: var(--font-display);
+  font-size: clamp(1.8rem, 4vw, 2.8rem);
+  font-weight: 700;
+  line-height: 1.15;
+  max-width: 14ch;
+}
+
+.landing__subtitle {
+  color: var(--color-text-dim);
+  max-width: 42ch;
+  font-size: 1.05rem;
+}
+
+/* --------------------------------------------------------------------
+   Theme-Auswahl: vier klickbare Farbmuster ("Swatches")
+   -------------------------------------------------------------------- */
+.theme-picker {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.theme-picker__label {
+  font-size: 0.8rem;
+  color: var(--color-text-dim);
+  font-family: var(--font-display);
+}
+
+.theme-picker__options {
+  display: flex;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+}
+
+/* Jeder Theme-Button zeigt eine kleine Vorschau der drei Hauptfarben
+   dieses Themes, unabhängig davon, welches Theme gerade aktiv ist.
+   Die Vorschaufarben werden inline im HTML per style="" gesetzt,
+   da sie fest zu ihrem jeweiligen Theme gehören (siehe index.html). */
+.theme-swatch {
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-md);
+  border: 2px solid var(--color-border);
+  cursor: pointer;
+  padding: 0;
+  overflow: hidden;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  transition: transform var(--transition-fast), border-color var(--transition-fast);
+}
+
+.theme-swatch:hover {
+  transform: translateY(-3px);
+}
+
+.theme-swatch:focus-visible {
+  outline: 3px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+/* Markiert das aktuell aktive Theme sichtbar */
+.theme-swatch[aria-pressed="true"] {
+  border-color: var(--color-accent);
+}
+
+.theme-swatch span {
+  display: block;
+}
+
+/* --------------------------------------------------------------------
+   Rechte Spalte: die Auth-Karte im Terminal-Look (Signatur-Element)
+   -------------------------------------------------------------------- */
+.landing__auth {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-5);
+  background-color: var(--color-surface);
+}
+
+.terminal {
+  width: 100%;
+  max-width: 420px;
+  background-color: var(--color-surface-raised);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card);
+  overflow: hidden;
+}
+
+/* Die Titelleiste des "Fensters", mit drei Punkten wie bei einem
+   echten Terminal-/Editor-Fenster (macOS-artige Ampel) */
+.terminal__titlebar {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-3) var(--space-4);
+  border-bottom: 1px solid var(--color-border);
+  font-family: var(--font-display);
+  font-size: 0.78rem;
+  color: var(--color-text-dim);
+}
+
+.terminal__dots {
+  display: flex;
+  gap: 6px;
+}
+
+.terminal__dots span {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: var(--color-border);
+}
+
+.terminal__path {
+  margin-left: var(--space-2);
+}
+
+/* Der "Prompt" oberhalb des Formulars, tippt sich beim Laden per JS
+   Zeichen für Zeichen (siehe js/auth-ui.js) */
+.terminal__prompt {
+  font-family: var(--font-display);
+  font-size: 0.85rem;
+  padding: var(--space-3) var(--space-4) 0;
+  color: var(--color-accent);
+  min-height: 1.4em;
+}
+
+.terminal__prompt::after {
+  content: "▍";
+  animation: blink 1s steps(1) infinite;
+}
+
+@keyframes blink {
+  50% {
+    opacity: 0;
+  }
+}
+
+/* --------------------------------------------------------------------
+   Tabs zum Umschalten zwischen Login und Registrierung
+   -------------------------------------------------------------------- */
+.auth-tabs {
+  display: flex;
+  padding: var(--space-3) var(--space-4) 0;
+  gap: var(--space-2);
+}
+
+.auth-tabs__btn {
+  flex: 1;
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  color: var(--color-text-dim);
+  font-family: var(--font-body);
+  font-weight: 600;
+  padding: var(--space-2) 0;
+  cursor: pointer;
+  transition: color var(--transition-fast), border-color var(--transition-fast);
+}
+
+.auth-tabs__btn[aria-selected="true"] {
+  color: var(--color-text);
+  border-color: var(--color-accent);
+}
+
+.auth-tabs__btn:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+/* --------------------------------------------------------------------
+   Formulare: Login und Registrierung
+   -------------------------------------------------------------------- */
+.auth-form {
+  padding: var(--space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+/* Über [hidden] blenden wir das inaktive Formular komplett aus dem
+   Layout aus (nicht nur visuell, sondern auch für Screenreader/Tab-Reihenfolge) */
+.auth-form[hidden] {
+  display: none;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.field label {
+  font-size: 0.85rem;
+  color: var(--color-text-dim);
+}
+
+.field input {
+  font-family: var(--font-body);
+  font-size: 1rem;
+  padding: 0.65rem 0.8rem;
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  color: var(--color-text);
+  transition: border-color var(--transition-fast);
+}
+
+.field input:focus-visible {
+  outline: none;
+  border-color: var(--color-accent);
+}
+
+/* Platz für Live-Fehlermeldungen unter jedem Feld (Barrierefreiheit:
+   per aria-live werden Screenreader informiert, siehe index.html) */
+.field__error {
+  font-size: 0.8rem;
+  color: var(--color-danger);
+  min-height: 1.1em;
+}
+
+.field__hint {
+  font-size: 0.78rem;
+  color: var(--color-text-dim);
+}
+
+/* Haupt-Button (Absenden) */
+.btn-primary {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 0.95rem;
+  padding: 0.75rem 1rem;
+  background-color: var(--color-accent);
+  color: var(--color-text-on-accent);
+  border: none;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: background-color var(--transition-fast), transform var(--transition-fast);
+}
+
+.btn-primary:hover {
+  background-color: var(--color-accent-hover);
+}
+
+.btn-primary:active {
+  transform: scale(0.98);
+}
+
+.btn-primary:focus-visible {
+  outline: 3px solid var(--color-accent-2);
+  outline-offset: 2px;
+}
+
+.btn-primary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Statusmeldung ganz unten in der Karte (z.B. "Bitte E-Mail bestätigen") */
+.terminal__status {
+  padding: 0 var(--space-4) var(--space-4);
+  font-size: 0.85rem;
+  color: var(--color-text-dim);
+  min-height: 1.2em;
+}
+
+.terminal__status[data-state="error"] {
+  color: var(--color-danger);
+}
+
+.terminal__status[data-state="success"] {
+  color: var(--color-success);
+}

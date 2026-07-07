@@ -1,0 +1,137 @@
+/* ==========================================================================
+   THEMES.CSS
+   ---------------------------------------------------------------------
+   Hier werden alle vier Farbwelten des Lernhub definiert.
+   Jedes Theme ist ein eigener Satz von CSS-Custom-Properties (Variablen).
+   Umgeschaltet wird über das Attribut data-theme="..." am <html>-Element
+   (siehe js/theme-switcher.js). Das restliche CSS (style.css) benutzt
+   NIE feste Farbwerte, sondern immer var(--irgendwas) - so reicht es,
+   hier EIN neues Theme hinzuzufügen, und der Rest der Seite funktioniert
+   automatisch mit, ohne dass style.css angefasst werden muss.
+   ========================================================================== */
+
+/* --------------------------------------------------------------------
+   THEME 1: "Dunkel" (DevOps-Look) - das Standard-Theme beim ersten Besuch
+   Dunkler Hintergrund, wie ein Terminal / eine IDE im Dark Mode.
+   -------------------------------------------------------------------- */
+:root,
+[data-theme="dunkel"] {
+  /* Hintergrundflächen, von hinten nach vorne gestaffelt */
+  --color-bg: #0b0f14; /* äußerster Seitenhintergrund */
+  --color-surface: #131920; /* Karten, Terminal-Fenster */
+  --color-surface-raised: #1a212b; /* Elemente, die noch weiter vorne liegen (Inputs) */
+  --color-border: #232b34; /* dezente Trennlinien */
+
+  /* Textfarben */
+  --color-text: #d7dde3; /* Haupttext */
+  --color-text-dim: #7b8794; /* gedämpfter Text, z.B. Platzhalter */
+  --color-text-on-accent: #06110b; /* Text auf farbigen Buttons */
+
+  /* Akzentfarben: Terminal-Grün als Hauptaktion, Blau als zweite Ebene */
+  --color-accent: #4ee1a0;
+  --color-accent-hover: #6ff0b8;
+  --color-accent-2: #7c9fff;
+
+  /* Statusfarben (für Formularvalidierung, überall gleich benannt) */
+  --color-danger: #ff6b6b;
+  --color-success: #4ee1a0;
+
+  /* Schatten - im Dark Theme dezent, da der Hintergrund schon dunkel ist */
+  --shadow-card: 0 20px 60px -20px rgba(0, 0, 0, 0.6);
+}
+
+/* --------------------------------------------------------------------
+   THEME 2: "Blumenwiese" - viele Grüntöne, soll die Augen beruhigen.
+   Akzente in Rosa, Magenta, Orange, Gelb, Hellblau.
+   -------------------------------------------------------------------- */
+[data-theme="blumenwiese"] {
+  --color-bg: #eef5ea;
+  --color-surface: #ffffff;
+  --color-surface-raised: #f5faf2;
+  --color-border: #d3e4cb;
+
+  --color-text: #2f3b2a;
+  --color-text-dim: #6d7d64;
+  --color-text-on-accent: #ffffff;
+
+  --color-accent: #e85d9c; /* Rosa/Magenta als Hauptaktion */
+  --color-accent-hover: #f07bb0;
+  --color-accent-2: #7ec8e3; /* Hellblau als zweite Ebene */
+
+  --color-danger: #d94f4f;
+  --color-success: #5aa469;
+
+  --shadow-card: 0 20px 50px -25px rgba(47, 59, 42, 0.25);
+}
+
+/* --------------------------------------------------------------------
+   THEME 3: "Zuckerwatte" - Rosatöne, Pfirsich, Apricot, Lila.
+   -------------------------------------------------------------------- */
+[data-theme="zuckerwatte"] {
+  --color-bg: #fdf2f6;
+  --color-surface: #ffffff;
+  --color-surface-raised: #fff7fa;
+  --color-border: #f3d9e6;
+
+  --color-text: #4a2e42;
+  --color-text-dim: #96788c;
+  --color-text-on-accent: #ffffff;
+
+  --color-accent: #b98cd6; /* Lila als Hauptaktion */
+  --color-accent-hover: #c8a3e0;
+  --color-accent-2: #ffb997; /* Pfirsich/Apricot als zweite Ebene */
+
+  --color-danger: #e0607a;
+  --color-success: #9fc98f;
+
+  --shadow-card: 0 20px 50px -25px rgba(185, 140, 214, 0.25);
+}
+
+/* --------------------------------------------------------------------
+   THEME 4: "Wolke" - helle Töne: Türkis, Hellblau, Weiß, Creme,
+   pastelliges Petrol.
+   -------------------------------------------------------------------- */
+[data-theme="wolke"] {
+  --color-bg: #f7fbfa;
+  --color-surface: #ffffff;
+  --color-surface-raised: #f0f7f6;
+  --color-border: #d9ebe8;
+
+  --color-text: #253b3c;
+  --color-text-dim: #6f8b8a;
+  --color-text-on-accent: #ffffff;
+
+  --color-accent: #4fb8ae; /* Petrol/Türkis als Hauptaktion */
+  --color-accent-hover: #63c9bf;
+  --color-accent-2: #8fd3e8; /* Hellblau als zweite Ebene */
+
+  --color-danger: #d97878;
+  --color-success: #4fb8ae;
+
+  --shadow-card: 0 20px 50px -25px rgba(37, 59, 60, 0.15);
+}
+
+/* --------------------------------------------------------------------
+   Übergreifende Werte, die sich NICHT pro Theme ändern:
+   Radien, Abstände, Schriftgrößen, Übergangsdauer.
+   Diese liegen bewusst hier (nicht in style.css), damit alle
+   Design-Tokens an einer Stelle gesammelt sind.
+   -------------------------------------------------------------------- */
+:root {
+  --font-display: "JetBrains Mono", "Fira Code", monospace;
+  --font-body: "IBM Plex Sans", "Segoe UI", sans-serif;
+
+  --radius-sm: 6px;
+  --radius-md: 12px;
+  --radius-lg: 20px;
+
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 1rem;
+  --space-4: 1.5rem;
+  --space-5: 2.5rem;
+  --space-6: 4rem;
+
+  --transition-fast: 150ms ease;
+  --transition-theme: 400ms ease; /* etwas langsamer, damit der Theme-Wechsel sichtbar "gleitet" */
+}
